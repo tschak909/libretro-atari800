@@ -228,6 +228,19 @@ static void update_variables(void)
 	   Atari800_InitialiseMachine();
 	 }
      }
+
+   if (autorun5200==1)
+     {
+       Atari800_machine_type = Atari800_MACHINE_5200;
+       MEMORY_ram_size = 16;
+       Atari800_builtin_basic = FALSE;
+       Atari800_keyboard_leds = FALSE;
+       Atari800_f_keys = FALSE;
+       Atari800_jumper = FALSE;
+       Atari800_builtin_game = FALSE;
+       Atari800_keyboard_detached = FALSE;
+       Atari800_InitialiseMachine();
+     }
    
    var.key = "atari800_ntscpal";
    var.value = NULL;
