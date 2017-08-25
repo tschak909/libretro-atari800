@@ -270,9 +270,6 @@ int PLATFORM_Keyboard(void)
 		return AKEY_NONE;
 	}
 
-//else if (Atari800_machine_type != Atari800_MACHINE_5200 && !UI_is_active)
-{
-
 	if (key_control)
 		shiftctrl ^= AKEY_CTRL;
 
@@ -426,56 +423,56 @@ int PLATFORM_Keyboard(void)
 
 	/* FIXME handle all keys */
 
-	if (Key_Sate[RETROK_a])return AKEY_A;
-	if (Key_Sate[RETROK_b])return AKEY_B;
-	if (Key_Sate[RETROK_c])return AKEY_C;
-	if (Key_Sate[RETROK_d])return AKEY_D;
-	if (Key_Sate[RETROK_e])return AKEY_E;
-	if (Key_Sate[RETROK_f])return AKEY_F;
-	if (Key_Sate[RETROK_g])return AKEY_G;
-	if (Key_Sate[RETROK_h])return AKEY_H;
-	if (Key_Sate[RETROK_i])return AKEY_I;
-	if (Key_Sate[RETROK_j])return AKEY_J;
-	if (Key_Sate[RETROK_k])return AKEY_K;
-	if (Key_Sate[RETROK_l])return AKEY_L;
-	if (Key_Sate[RETROK_m])return AKEY_M;
-	if (Key_Sate[RETROK_n])return AKEY_N;
-	if (Key_Sate[RETROK_o])return AKEY_O;
-	if (Key_Sate[RETROK_p])return AKEY_P;
-	if (Key_Sate[RETROK_q])return AKEY_Q;
-	if (Key_Sate[RETROK_r])return AKEY_R;
-	if (Key_Sate[RETROK_s])return AKEY_S;
-	if (Key_Sate[RETROK_t])return AKEY_T;
-	if (Key_Sate[RETROK_u])return AKEY_U;
-	if (Key_Sate[RETROK_v])return AKEY_V;
-	if (Key_Sate[RETROK_w])return AKEY_W;
-	if (Key_Sate[RETROK_x])return AKEY_X;
-	if (Key_Sate[RETROK_y])return AKEY_Y;
-	if (Key_Sate[RETROK_z])return AKEY_Z;
+	if (Key_Sate[RETROK_a])return AKEY_A|shiftctrl;
+	if (Key_Sate[RETROK_b])return AKEY_B|shiftctrl;
+	if (Key_Sate[RETROK_c])return AKEY_C|shiftctrl;
+	if (Key_Sate[RETROK_d])return AKEY_D|shiftctrl;
+	if (Key_Sate[RETROK_e])return AKEY_E|shiftctrl;
+	if (Key_Sate[RETROK_f])return AKEY_F|shiftctrl;
+	if (Key_Sate[RETROK_g])return AKEY_G|shiftctrl;
+	if (Key_Sate[RETROK_h])return AKEY_H|shiftctrl;
+	if (Key_Sate[RETROK_i])return AKEY_I|shiftctrl;
+	if (Key_Sate[RETROK_j])return AKEY_J|shiftctrl;
+	if (Key_Sate[RETROK_k])return AKEY_K|shiftctrl;
+	if (Key_Sate[RETROK_l])return AKEY_L|shiftctrl;
+	if (Key_Sate[RETROK_m])return AKEY_M|shiftctrl;
+	if (Key_Sate[RETROK_n])return AKEY_N|shiftctrl;
+	if (Key_Sate[RETROK_o])return AKEY_O|shiftctrl;
+	if (Key_Sate[RETROK_p])return AKEY_P|shiftctrl;
+	if (Key_Sate[RETROK_q])return AKEY_Q|shiftctrl;
+	if (Key_Sate[RETROK_r])return AKEY_R|shiftctrl;
+	if (Key_Sate[RETROK_s])return AKEY_S|shiftctrl;
+	if (Key_Sate[RETROK_t])return AKEY_T|shiftctrl;
+	if (Key_Sate[RETROK_u])return AKEY_U|shiftctrl;
+	if (Key_Sate[RETROK_v])return AKEY_V|shiftctrl;
+	if (Key_Sate[RETROK_w])return AKEY_W|shiftctrl;
+	if (Key_Sate[RETROK_x])return AKEY_X|shiftctrl;
+	if (Key_Sate[RETROK_y])return AKEY_Y|shiftctrl;
+	if (Key_Sate[RETROK_z])return AKEY_Z|shiftctrl;
 
-	if (Key_Sate[RETROK_0])return AKEY_0;
-	if (Key_Sate[RETROK_1])return AKEY_1;
-	if (Key_Sate[RETROK_2])return AKEY_2;
-	if (Key_Sate[RETROK_3])return AKEY_3;
-	if (Key_Sate[RETROK_4])return AKEY_4;
-	if (Key_Sate[RETROK_5])return AKEY_5;
-	if (Key_Sate[RETROK_6])return AKEY_6;
-	if (Key_Sate[RETROK_7])return AKEY_7;
-	if (Key_Sate[RETROK_8])return AKEY_8;
-	if (Key_Sate[RETROK_9])return AKEY_9;
+	if (Key_Sate[RETROK_0])return AKEY_0|shiftctrl;
+	if (Key_Sate[RETROK_1])return AKEY_1|shiftctrl;
+	if (Key_Sate[RETROK_2])return AKEY_2|shiftctrl;
+	if (Key_Sate[RETROK_3])return AKEY_3|shiftctrl;
+	if (Key_Sate[RETROK_4])return AKEY_4|shiftctrl;
+	if (Key_Sate[RETROK_5])return AKEY_5|shiftctrl;
+	if (Key_Sate[RETROK_6])return AKEY_6|shiftctrl;
+	if (Key_Sate[RETROK_7])return AKEY_7|shiftctrl;
+	if (Key_Sate[RETROK_8])return AKEY_8|shiftctrl;
+	if (Key_Sate[RETROK_9])return AKEY_9|shiftctrl;
 
 //	if (Key_Sate[RETROK_SPACE])return AKEY_SPACE;
 //	if (Key_Sate[RETROK_BACKQUOTE])return AKEY_NONE; //???
-	if (Key_Sate[RETROK_BACKSLASH])return AKEY_BACKSLASH;
-	if (Key_Sate[RETROK_COMMA])return AKEY_COMMA;
-	if (Key_Sate[RETROK_PERIOD])return AKEY_FULLSTOP;
-	if (Key_Sate[RETROK_MINUS])return AKEY_MINUS;
-	if (Key_Sate[RETROK_EQUALS])return AKEY_EQUAL;
-	if (Key_Sate[RETROK_LEFTBRACKET])return AKEY_BRACKETLEFT;
-	if (Key_Sate[RETROK_RIGHTBRACKET])return AKEY_BRACKETRIGHT;
-	if (Key_Sate[RETROK_SEMICOLON])return AKEY_SEMICOLON;
-	if (Key_Sate[RETROK_QUOTE])return AKEY_QUOTE;
-	if (Key_Sate[RETROK_SLASH])return AKEY_SLASH;
+	if (Key_Sate[RETROK_BACKSLASH])return AKEY_BACKSLASH|shiftctrl;
+	if (Key_Sate[RETROK_COMMA])return AKEY_COMMA|shiftctrl;
+	if (Key_Sate[RETROK_PERIOD])return AKEY_FULLSTOP|shiftctrl;
+	if (Key_Sate[RETROK_MINUS])return AKEY_MINUS|shiftctrl;
+	if (Key_Sate[RETROK_EQUALS])return AKEY_EQUAL|shiftctrl;
+	if (Key_Sate[RETROK_LEFTBRACKET])return AKEY_BRACKETLEFT|shiftctrl;
+	if (Key_Sate[RETROK_RIGHTBRACKET])return AKEY_BRACKETRIGHT|shiftctrl;
+	if (Key_Sate[RETROK_SEMICOLON])return AKEY_SEMICOLON|shiftctrl;
+	if (Key_Sate[RETROK_QUOTE])return AKEY_QUOTE|shiftctrl;
+	if (Key_Sate[RETROK_SLASH])return AKEY_SLASH|shiftctrl;
 
 //	if (Key_Sate[RETROK_ESCAPE])return AKEY_ESCAPE;
 //	if (Key_Sate[RETROK_RETURN])return AKEY_RETURN;
@@ -543,7 +540,6 @@ int PLATFORM_Keyboard(void)
 		return AKEY_ESCAPE;
 	if (mbt[RETRO_DEVICE_ID_JOYPAD_B])
 		return AKEY_RETURN;
-}
 
 	if (UI_is_active){
 	// whitout kbd in GUI 
