@@ -425,7 +425,7 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
       log_cb(RETRO_LOG_INFO, "AV_INFO: aspect_ratio = %f\n",info->geometry.aspect_ratio);
 
    info->timing.fps            = retro_fps;
-   info->timing.sample_rate    = 48000.0;
+   info->timing.sample_rate    = 44100.0;
 
    if (log_cb)
       log_cb(RETRO_LOG_INFO, "AV_INFO: fps = %f sample_rate = %f\n",info->timing.fps,info->timing.sample_rate);
