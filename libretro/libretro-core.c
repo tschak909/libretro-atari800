@@ -402,9 +402,6 @@ void retro_shutdown_core(void)
 
 void retro_reset(void){
   
-  if (UI_is_active)
-    UI_is_active=FALSE;
-
   Atari800_InitialiseMachine();
   
 }
