@@ -2,6 +2,7 @@
 
 #include "libretro-core.h"
 #include "atari.h"
+#include "ui.h"
 #include "devices.h"
 #include "esc.h"
 #include "memory.h"
