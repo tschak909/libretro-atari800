@@ -400,7 +400,12 @@ void retro_shutdown_core(void)
 }
 
 void retro_reset(void){
+  
+  if (UI_is_active)
+    UI_is_active=FALSE;
 
+  Atari800_InitializeMachine();
+  
 }
 
 void retro_get_system_av_info(struct retro_system_av_info *info)
