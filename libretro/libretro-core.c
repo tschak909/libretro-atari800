@@ -405,7 +405,7 @@ void retro_reset(void){
   if (UI_is_active)
     UI_is_active=FALSE;
 
-  Atari800_InitializeMachine();
+  Atari800_InitialiseMachine();
   
 }
 
