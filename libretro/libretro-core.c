@@ -726,7 +726,7 @@ bool retro_load_game_special(unsigned type, const struct retro_game_info *info, 
 
 size_t retro_serialize_size(void)
 {
-   return ALLOC_LEN;
+  return StateSav_len();
 }
 
 bool retro_serialize(void *data_, size_t size)
@@ -736,12 +736,14 @@ bool retro_serialize(void *data_, size_t size)
 #else
   StateSav_SaveAtariState("/dev/null","w",0);
 #endif
+  memset(membuf,0,ALLOC_LEN);
   memcpy(data_,membuf,ALLOC_LEN);
   return true;
 }
 
 bool retro_unserialize(const void *data_, size_t size)
 {
+  memset(membuf,0,ALLOC_LEN);
   memcpy(membuf,data_,size);
 #ifdef WIN32
   StateSav_ReadAtariState("NUL","rb");

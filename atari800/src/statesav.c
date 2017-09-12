@@ -76,6 +76,7 @@
 
 #if defined(__LIBRETRO__)
 extern char* membuf;
+static size_t state_len;
 #define GZOPEN(X, Y)     fmemopen(membuf, 210000,Y)
 #define GZCLOSE(X)       fclose(X)
 #define GZREAD(X, Y, Z)  fread(Y, Z, 1, X)
@@ -436,6 +437,10 @@ int StateSav_SaveAtariState(const char *filename, const char *mode, UBYTE SaveVe
 	DCStateSave();
 #endif
 
+#if defined(__LIBRETRO__)
+	state_len = ftell(StateFile);
+#endif
+	
 	if (GZCLOSE(StateFile) != 0) {
 		StateFile = NULL;
 		return FALSE;
@@ -593,6 +598,13 @@ int StateSav_ReadAtariState(const char *filename, const char *mode)
 
 	return TRUE;
 }
+
+#if defined(__LIBRETRO__)
+size_t StateSav_len()
+{
+  return state_len;
+}
+#endif
 
 /* hack to compress in memory before writing
  * - for DREAMCAST only

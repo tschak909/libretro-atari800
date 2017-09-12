@@ -16,4 +16,8 @@ void StateSav_ReadUWORD(UWORD *data, int num);
 void StateSav_ReadINT(int *data, int num);
 void StateSav_ReadFNAME(char *filename);
 
+#if defined(__LIBRETRO__)
+size_t StateSav_len();
+#endif
+
 #endif /* STATESAV_H_ */
