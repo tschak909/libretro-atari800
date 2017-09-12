@@ -74,17 +74,7 @@
 
 #define SAVE_VERSION_NUMBER 8 /* Last changed after Atari800 3.1.0 */
 
-#if defined(__LIBRETRO__)
-#undef GZERROR
-#define gzFile  FILE *
-#define Z_OK    0
-static gzFile *mem_open(const char *name, const char *mode);
-static int mem_close(gzFile *stream);
-#define GZOPEN(X, Y)     mem_open(X, Y)
-#define GZCLOSE(X)       mem_close(X)
-#define GZREAD(X,Y,Z)    fread(Y, Z, 1, X)
-#define GZWRITE(X,Y,Z)   fwrite(Y, Z, 1, X)
-#elif defined(MEMCOMPR)
+#if defined(MEMCOMPR)
 static gzFile *mem_open(const char *name, const char *mode);
 static int mem_close(gzFile *stream);
 static size_t mem_read(void *buf, size_t len, gzFile *stream);
@@ -311,6 +301,11 @@ void StateSav_SaveFNAME(const char *filename)
 #ifdef HAVE_GETCWD
 	char dirname[FILENAME_MAX]="";
 
+	if (strcmp(filename,"/dev/null") == 0 || strcmp(filename,"NUL" == 0))
+	  {
+	    strcpy(filename,"libretro.sav");
+	  }
+	
 	/* Check to see if file is in application tree, if so, just save as
 	   relative path....*/
 	if (getcwd(dirname, FILENAME_MAX) != NULL) {
@@ -355,6 +350,15 @@ int StateSav_SaveAtariState(const char *filename, const char *mode, UBYTE SaveVe
 		GetGZErrorText();
 		return FALSE;
 	}
+	else
+	  {
+ #ifdef __LIBRETRO__
+	    if (strcmp(filename,"/dev/null") == 0 || strcmp(filename,"NUL" == 0))
+	      {
+		setbuffer(StateFile, membuf, 210000);
+	      }
+ #endif
+	  }
 	if (GZWRITE(StateFile, "ATARI800", 8) == 0) {
 		GetGZErrorText();
 		GZCLOSE(StateFile);
@@ -441,7 +445,15 @@ int StateSav_ReadAtariState(const char *filename, const char *mode)
 		GetGZErrorText();
 		return FALSE;
 	}
+#ifdef __LIBRETRO
 
+	if (strcmp(filename,"/dev/null") == 0 || strcmp(filename, "NUL") == 0)
+	  {
+	    setbuffer(StateFile,membuf,210000);
+	  }
+
+#endif
+	
 	if (GZREAD(StateFile, header_string, 8) == 0) {
 		GetGZErrorText();
 		GZCLOSE(StateFile);
@@ -551,60 +563,6 @@ int StateSav_ReadAtariState(const char *filename, const char *mode)
 	return TRUE;
 }
 
-#ifdef __LIBRETRO__
-
-extern char *membuf;
-#define OM_READ  1
-#define OM_WRITE 2
-#define ALLOC_LEN 210000
-static int openmode;
-#ifdef WIN32
-#define IN_MEMORY_FILENAME "NUL"
-#else
-#define IN_MEMORY_FILENAME "/dev/null"
-#endif
-
-/**
- * libretro specific state saving (in memory file)
- */
-static gzFile *mem_open(const char *name, const char *mode)
-{
-  if (*mode == 'w')
-    {
-      /* Open for write */
-      FILE *f;
-      printf("Opening state file %s for write (Filename ignored, writing to memory)",name);
-      openmode = OM_WRITE;
-      membuf = Util_malloc(ALLOC_LEN);
-      f = fopen(IN_MEMORY_FILENAME,mode);
-      if (f == NULL)
-	return NULL;
-      setbuffer(f,membuf,ALLOC_LEN);
-      return f;
-    }
-  else
-    {
-      /* Open for read */
-      FILE *f;
-      openmode=OM_READ;
-      f = fopen(IN_MEMORY_FILENAME,mode);
-      if (f == NULL)
-	return NULL;
-      setbuffer(f,membuf,ALLOC_LEN);
-      return f;
-    }
-}
-
-static int mem_close(gzFile *stream)
-{
-  if (stream == NULL)
-    return 0;
-
-  return fclose(stream);
-}
-
-#endif /* __LIBRETRO__ */
-
 /* hack to compress in memory before writing
  * - for DREAMCAST only
  * - 2 reasons for this:
@@ -622,8 +580,6 @@ static int openmode;
 static unsigned int unclen;
 static char savename[FILENAME_MAX];
 #define HDR_LEN 640
-
-#define ALLOC_LEN 210000
 
 /* replacement for GZOPEN */
 static gzFile *mem_open(const char *name, const char *mode)
