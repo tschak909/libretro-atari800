@@ -74,7 +74,15 @@
 
 #define SAVE_VERSION_NUMBER 8 /* Last changed after Atari800 3.1.0 */
 
-#if defined(MEMCOMPR)
+#if defined(__LIBRETRO__)
+#define GZOPEN(X, Y)     fopen(X, Y)
+#define GZCLOSE(X)       fclose(X)
+#define GZREAD(X, Y, Z)  fread(Y, Z, 1, X)
+#define GZWRITE(X, Y, Z) fwrite(Y, Z, 1, X)
+#undef GZERROR
+#define gzFile  FILE *
+#define Z_OK    0
+#elif defined(MEMCOMPR)
 static gzFile *mem_open(const char *name, const char *mode);
 static int mem_close(gzFile *stream);
 static size_t mem_read(void *buf, size_t len, gzFile *stream);
