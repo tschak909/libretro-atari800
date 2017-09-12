@@ -305,11 +305,18 @@ void StateSav_ReadINT(int *data, int num)
 
 void StateSav_SaveFNAME(const char *filename)
 {
+#if defined(__LIBRETRO__)
+  UWORD namelen=2;
+  const UBYTE *fn = malloc(3);
+
+  StateSav_SaveUWORD(&namelen,1);
+  StateSav_SaveUBYTE(fn, namelen);
+#else
 	UWORD namelen;
 #ifdef HAVE_GETCWD
 	char dirname[FILENAME_MAX]="";
 
-	if (strcmp(filename,"/dev/null") == 0 || strcmp(filename,"NUL" == 0))
+	if (strcmp(filename,nulname) == 0)
 	  {
 	    strcpy(filename,"libretro.sav");
 	  }
@@ -327,12 +334,13 @@ void StateSav_SaveFNAME(const char *filename)
 	/* Save the length of the filename, followed by the filename */
 	StateSav_SaveUWORD(&namelen, 1);
 	StateSav_SaveUBYTE((const UBYTE *) filename, namelen);
+#endif /* __LIBRETRO__ */
 }
 
 void StateSav_ReadFNAME(char *filename)
 {
 	UWORD namelen = 0;
-
+	
 	StateSav_ReadUWORD(&namelen, 1);
 	if (namelen >= FILENAME_MAX) {
 		Log_print("Filenames of %d characters not supported on this platform", (int) namelen);
@@ -345,7 +353,16 @@ void StateSav_ReadFNAME(char *filename)
 int StateSav_SaveAtariState(const char *filename, const char *mode, UBYTE SaveVerbose)
 {
 	UBYTE StateVersion = SAVE_VERSION_NUMBER;
+#if defined(__LIBRETRO__)
 
+#if defined(WIN32)
+	char nulname[] = "NUL";
+#else
+	char nulname[] = "/dev/null";
+#endif 	
+	
+#endif /* __LIBRETRO__ */
+	
 	if (StateFile != NULL) {
 		GZCLOSE(StateFile);
 		StateFile = NULL;
@@ -361,7 +378,7 @@ int StateSav_SaveAtariState(const char *filename, const char *mode, UBYTE SaveVe
 	else
 	  {
  #ifdef __LIBRETRO__
-	    if (strcmp(filename,"/dev/null") == 0 || strcmp(filename,"NUL" == 0))
+	    if (strcmp(filename,nulname) == 0)
 	      {
 		setbuffer(StateFile, membuf, 210000);
 	      }
@@ -440,7 +457,17 @@ int StateSav_ReadAtariState(const char *filename, const char *mode)
 	char header_string[8];
 	UBYTE StateVersion = 0;  /* The version of the save file */
 	UBYTE SaveVerbose = 0;   /* Verbose mode means save basic, OS if patched */
+#if defined(__LIBRETRO__)
 
+#if defined(WIN32)
+	char nulname[] = "NUL";
+#else
+	char nulname[] = "/dev/null";
+#endif
+
+#endif
+	
+	
 	if (StateFile != NULL) {
 		GZCLOSE(StateFile);
 		StateFile = NULL;
@@ -453,9 +480,9 @@ int StateSav_ReadAtariState(const char *filename, const char *mode)
 		GetGZErrorText();
 		return FALSE;
 	}
-#ifdef __LIBRETRO
+#ifdef __LIBRETRO__
 
-	if (strcmp(filename,"/dev/null") == 0 || strcmp(filename, "NUL") == 0)
+	if (strcmp(filename,nulname) == 0)
 	  {
 	    setbuffer(StateFile,membuf,210000);
 	  }
