@@ -75,7 +75,7 @@
 #define SAVE_VERSION_NUMBER 8 /* Last changed after Atari800 3.1.0 */
 
 #if defined(__LIBRETRO__)
-#define GZOPEN(X, Y)     fopen(X, Y)
+#define GZOPEN(X, Y)     fmemopen(membuf, 210000,Y)
 #define GZCLOSE(X)       fclose(X)
 #define GZREAD(X, Y, Z)  fread(Y, Z, 1, X)
 #define GZWRITE(X, Y, Z) fwrite(Y, Z, 1, X)
@@ -355,11 +355,11 @@ int StateSav_SaveAtariState(const char *filename, const char *mode, UBYTE SaveVe
 	UBYTE StateVersion = SAVE_VERSION_NUMBER;
 #if defined(__LIBRETRO__)
 
-#if defined(WIN32)
-	char nulname[] = "NUL";
-#else
-	char nulname[] = "/dev/null";
-#endif 	
+/* #if defined(WIN32) */
+/* 	char nulname[] = "NUL"; */
+/* #else */
+/* 	char nulname[] = "/dev/null"; */
+/* #endif 	 */
 	
 #endif /* __LIBRETRO__ */
 	
@@ -377,12 +377,7 @@ int StateSav_SaveAtariState(const char *filename, const char *mode, UBYTE SaveVe
 	}
 	else
 	  {
- #ifdef __LIBRETRO__
-	    if (strcmp(filename,nulname) == 0)
-	      {
-		setbuffer(StateFile, membuf, 210000);
-	      }
- #endif
+	    // Nothing here anymore.
 	  }
 	if (GZWRITE(StateFile, "ATARI800", 8) == 0) {
 		GetGZErrorText();
@@ -484,7 +479,7 @@ int StateSav_ReadAtariState(const char *filename, const char *mode)
 
 	if (strcmp(filename,nulname) == 0)
 	  {
-	    setbuffer(StateFile,membuf,210000);
+	    // nothing here anymore...
 	  }
 
 #endif
