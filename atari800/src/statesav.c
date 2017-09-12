@@ -75,6 +75,7 @@
 #define SAVE_VERSION_NUMBER 8 /* Last changed after Atari800 3.1.0 */
 
 #if defined(__LIBRETRO__)
+extern char* membuf;
 #define GZOPEN(X, Y)     fmemopen(membuf, 210000,Y)
 #define GZCLOSE(X)       fclose(X)
 #define GZREAD(X, Y, Z)  fread(Y, Z, 1, X)
