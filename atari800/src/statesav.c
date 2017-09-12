@@ -22,6 +22,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#include "libretro-core.h"
 #include "config.h"
 #include <stdio.h>
 #include <string.h>
@@ -73,7 +74,17 @@
 
 #define SAVE_VERSION_NUMBER 8 /* Last changed after Atari800 3.1.0 */
 
-#if defined(MEMCOMPR)
+#if defined(__LIBRETRO__)
+#undef GZERROR
+#define gzFile  FILE *
+#define Z_OK    0
+static gzFile *mem_open(const char *name, const char *mode);
+static int mem_close(gzFile *stream);
+#define GZOPEN(X, Y)     mem_open(X, Y)
+#define GZCLOSE(X)       mem_close(X)
+#define GZREAD(X,Y,Z)    fread(Y, Z, 1, X)
+#define GZWRITE(X,Y,Z)   fwrite(Y, Z, 1, X)
+#elif defined(MEMCOMPR)
 static gzFile *mem_open(const char *name, const char *mode);
 static int mem_close(gzFile *stream);
 static size_t mem_read(void *buf, size_t len, gzFile *stream);
@@ -540,6 +551,60 @@ int StateSav_ReadAtariState(const char *filename, const char *mode)
 	return TRUE;
 }
 
+#ifdef __LIBRETRO__
+
+extern char *membuf;
+#define OM_READ  1
+#define OM_WRITE 2
+#define ALLOC_LEN 210000
+static int openmode;
+#ifdef WIN32
+#define IN_MEMORY_FILENAME "NUL"
+#else
+#define IN_MEMORY_FILENAME "/dev/null"
+#endif
+
+/**
+ * libretro specific state saving (in memory file)
+ */
+static gzFile *mem_open(const char *name, const char *mode)
+{
+  if (*mode == 'w')
+    {
+      /* Open for write */
+      FILE *f;
+      printf("Opening state file %s for write (Filename ignored, writing to memory)",name);
+      openmode = OM_WRITE;
+      membuf = Util_malloc(ALLOC_LEN);
+      f = fopen(IN_MEMORY_FILENAME,mode);
+      if (f == NULL)
+	return NULL;
+      setbuffer(f,membuf,ALLOC_LEN);
+      return f;
+    }
+  else
+    {
+      /* Open for read */
+      FILE *f;
+      openmode=OM_READ;
+      f = fopen(IN_MEMORY_FILENAME,mode);
+      if (f == NULL)
+	return NULL;
+      membuf = Util_malloc(ALLOC_LEN);
+      setbuffer(f,membuf,ALLOC_LEN);
+      return f;
+    }
+}
+
+static int mem_close(gzFile *stream)
+{
+  if (stream == NULL)
+    return 0;
+
+  return fclose(stream);
+}
+
+#endif /* __LIBRETRO__ */
 
 /* hack to compress in memory before writing
  * - for DREAMCAST only

@@ -33,6 +33,8 @@
 
 #include "libco/libco.h"
 
+static char *membuf;
+
 extern cothread_t mainThread;
 extern cothread_t emuThread;
 

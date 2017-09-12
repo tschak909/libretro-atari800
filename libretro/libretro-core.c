@@ -8,6 +8,7 @@
 #include "memory.h"
 #include "cassette.h"
 #include "artifact.h"
+#include "statesav.h"
 
 cothread_t mainThread;
 cothread_t emuThread;
@@ -20,6 +21,7 @@ int retroh=300;
 
 #define RETRO_DEVICE_ATARI_KEYBOARD RETRO_DEVICE_SUBCLASS(RETRO_DEVICE_KEYBOARD, 0)
 #define RETRO_DEVICE_ATARI_JOYSTICK RETRO_DEVICE_SUBCLASS(RETRO_DEVICE_JOYPAD, 1)
+#define ALLOC_LEN 210000
 
 unsigned atari_devices[ 2 ];
 
@@ -375,6 +377,8 @@ void Emu_init(){
 
  //  update_variables();
 
+   membuf=malloc(ALLOC_LEN);
+   
    memset(Key_Sate,0,512);
    memset(Key_Sate2,0,512);
 
@@ -388,7 +392,7 @@ void Emu_init(){
 }
 
 void Emu_uninit(){
-
+  free(membuf);
    texture_uninit();
 }
 
@@ -721,17 +725,21 @@ bool retro_load_game_special(unsigned type, const struct retro_game_info *info, 
 
 size_t retro_serialize_size(void)
 {
-   return 0;
+   return ALLOC_LEN;
 }
 
 bool retro_serialize(void *data_, size_t size)
 {
-   return false;
+  StateSav_SaveAtariState("","wb",0);
+  memcpy(data_,membuf,ALLOC_LEN);
+  return true;
 }
 
 bool retro_unserialize(const void *data_, size_t size)
 {
-   return false;
+  memcpy(membuf,data_,size);
+  StateSav_ReadAtariState("","wb");
+   return true;
 }
 
 void *retro_get_memory_data(unsigned id)
