@@ -590,7 +590,6 @@ static gzFile *mem_open(const char *name, const char *mode)
       f = fopen(IN_MEMORY_FILENAME,mode);
       if (f == NULL)
 	return NULL;
-      membuf = Util_malloc(ALLOC_LEN);
       setbuffer(f,membuf,ALLOC_LEN);
       return f;
     }

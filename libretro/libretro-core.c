@@ -378,6 +378,7 @@ void Emu_init(){
  //  update_variables();
 
    membuf=malloc(ALLOC_LEN);
+   memset(membuf,0,ALLOC_LEN);
    
    memset(Key_Sate,0,512);
    memset(Key_Sate2,0,512);
