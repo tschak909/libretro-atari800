@@ -731,7 +731,11 @@ size_t retro_serialize_size(void)
 
 bool retro_serialize(void *data_, size_t size)
 {
-  StateSav_SaveAtariState("","wb",0);
+#ifdef WIN32
+  StateSav_SaveAtariState("NUL","wb",0);
+#else
+  StateSav_SaveAtariState("/dev/null","w",0);
+#endif
   memcpy(data_,membuf,ALLOC_LEN);
   return true;
 }
@@ -739,7 +743,11 @@ bool retro_serialize(void *data_, size_t size)
 bool retro_unserialize(const void *data_, size_t size)
 {
   memcpy(membuf,data_,size);
-  StateSav_ReadAtariState("","wb");
+#ifdef WIN32
+  StateSav_ReadAtariState("NUL","wb");
+#else
+  StateSav_ReadAtariState("/dev/null","w");
+#endif
    return true;
 }
 
