@@ -744,11 +744,11 @@ bool retro_unserialize(const void *data_, size_t size)
 {
   memcpy(membuf,data_,size);
 #ifdef WIN32
-  StateSav_ReadAtariState("NUL","wb");
+  StateSav_ReadAtariState("NUL","rb");
 #else
-  StateSav_ReadAtariState("/dev/null","w");
+  StateSav_ReadAtariState("/dev/null","r");
 #endif
-   return true;
+  return true;
 }
 
 void *retro_get_memory_data(unsigned id)
