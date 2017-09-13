@@ -731,12 +731,14 @@ size_t retro_serialize_size(void)
 
 bool retro_serialize(void *data_, size_t size)
 {
-  memset(membuf,0,ALLOC_LEN); 
+  memset(membuf,0,ALLOC_LEN);
+  co_switch(emuThread);
 #ifdef WIN32
   StateSav_SaveAtariState("ATARI","wb",0);
 #else
   StateSav_SaveAtariState("ATARI","w",0);
 #endif
+  co_switch(mainThread);
   memcpy(data_,membuf,ALLOC_LEN);
   return true;
 }
@@ -745,11 +747,13 @@ bool retro_unserialize(const void *data_, size_t size)
 {
   memset(membuf,0,ALLOC_LEN);
   memcpy(membuf,data_,size);
+  co_switch(emuThread);
 #ifdef WIN32
   StateSav_ReadAtariState("ATARI","rb");
 #else
   StateSav_ReadAtariState("ATARI","r");
 #endif
+  co_switch(mainThread);
   return true;
 }
 
