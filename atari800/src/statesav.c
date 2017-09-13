@@ -520,6 +520,7 @@ int StateSav_ReadAtariState(const char *filename, const char *mode)
 	PIA_StateRead(StateVersion);
 	POKEY_StateRead();
 	if (StateVersion >= 6) {
+#ifndef __LIBRETRO__
 #ifdef XEP80_EMULATION
 		XEP80_StateRead();
 #else
@@ -575,6 +576,7 @@ int StateSav_ReadAtariState(const char *filename, const char *mode)
 			}
 		}
 #endif /* PBI_XLD */
+#endif /* LIBRETRO */
 	}
 #ifdef DREAMCAST
 	DCStateRead();
