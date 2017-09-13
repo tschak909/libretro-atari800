@@ -731,12 +731,12 @@ size_t retro_serialize_size(void)
 
 bool retro_serialize(void *data_, size_t size)
 {
+  memset(membuf,0,ALLOC_LEN); 
 #ifdef WIN32
   StateSav_SaveAtariState("ATARI","wb",0);
 #else
   StateSav_SaveAtariState("ATARI","w",0);
 #endif
-  memset(membuf,0,ALLOC_LEN);
   memcpy(data_,membuf,ALLOC_LEN);
   return true;
 }
