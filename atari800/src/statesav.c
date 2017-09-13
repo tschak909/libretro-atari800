@@ -134,7 +134,6 @@ static void GetGZErrorText(void)
 /* Value is memory location of data, num is number of type to save */
 void StateSav_SaveUBYTE(const UBYTE *data, int num)
 {
-  unsigned int writeBytes=0;
   printf("StateSav_SaveUBYTE(%c,%d)",data,num);
 	if (!StateFile || nFileError != Z_OK)
 		return;
@@ -143,29 +142,26 @@ void StateSav_SaveUBYTE(const UBYTE *data, int num)
 	   directly to the active bits if in a padded location. If not (unlikely)
 	   you'll have to redefine this to save appropriately for cross-platform
 	   compatibility */
-	if (writeBytes=GZWRITE(StateFile, data, num) == 0)
+	if (GZWRITE(StateFile, data, num) == 0)
 		GetGZErrorText();
-	printf("Wrote %u bytes\n",writeBytes);
 	
 }
 
 /* Value is memory location of data, num is number of type to save */
 void StateSav_ReadUBYTE(UBYTE *data, int num)
 {
-  unsigned int readBytes=0;
 	if (!StateFile || nFileError != Z_OK)
 		return;
 
-	if (readBytes=GZREAD(StateFile, data, num) == 0)
+	if (GZREAD(StateFile, data, num) == 0)
 		GetGZErrorText();
 
-	printf("Read %u bytes\n",readBytes);
+
 }
 
 /* Value is memory location of data, num is number of type to save */
 void StateSav_SaveUWORD(const UWORD *data, int num)
 {
-  unsigned int saveWords=0;
 	if (!StateFile || nFileError != Z_OK)
 		return;
 
@@ -179,44 +175,37 @@ void StateSav_SaveUWORD(const UWORD *data, int num)
 
 		temp = *data++;
 		byte = temp & 0xff;
-		if (saveWords=GZWRITE(StateFile, &byte, 1) == 0) {
+		if (GZWRITE(StateFile, &byte, 1) == 0) {
 			GetGZErrorText();
 			break;
 		}
-		printf("Wrote %u lower byte of word.\n",saveWords);
-
 		temp >>= 8;
 		byte = temp & 0xff;
-		if (saveWords=GZWRITE(StateFile, &byte, 1) == 0) {
+		if (GZWRITE(StateFile, &byte, 1) == 0) {
 			GetGZErrorText();
 			break;
 		}
 		num--;
-		printf("Wrote %u upper byte of word.\n",saveWords);
 	}
 }
 
 /* Value is memory location of data, num is number of type to save */
 void StateSav_ReadUWORD(UWORD *data, int num)
 {
-  unsigned int readWords=0;
 	if (!StateFile || nFileError != Z_OK)
 		return;
 
 	while (num > 0) {
 		UBYTE byte1, byte2;
 
-		if (readWords=GZREAD(StateFile, &byte1, 1) == 0) {
+		if (GZREAD(StateFile, &byte1, 1) == 0) {
 			GetGZErrorText();
 			break;
 		}
-		printf("Read %u lower byte of word.\n",readWords);
-
-		if (readWords=GZREAD(StateFile, &byte2, 1) == 0) {
+		if (GZREAD(StateFile, &byte2, 1) == 0) {
 			GetGZErrorText();
 			break;
 		}
-		printf("Read %u upper byte of word.\n",readWords);
 
 		*data++ = (byte2 << 8) | byte1;
 		num--;
@@ -225,7 +214,6 @@ void StateSav_ReadUWORD(UWORD *data, int num)
 
 void StateSav_SaveINT(const int *data, int num)
 {
-  unsigned int saveInts=0;
 	if (!StateFile || nFileError != Z_OK)
 		return;
 
@@ -247,35 +235,31 @@ void StateSav_SaveINT(const int *data, int num)
 		temp = (unsigned int) temp0;
 
 		byte = temp & 0xff;
-		if (saveInts=GZWRITE(StateFile, &byte, 1) == 0) {
+		if (GZWRITE(StateFile, &byte, 1) == 0) {
 			GetGZErrorText();
 			break;
 		}
-		printf("Wrote byte 0: %u byte of int\n",saveInts);
 
 		temp >>= 8;
 		byte = temp & 0xff;
-		if (saveInts=GZWRITE(StateFile, &byte, 1) == 0) {
+		if (GZWRITE(StateFile, &byte, 1) == 0) {
 			GetGZErrorText();
 			break;
 		}
-		printf("Wrote byte 1: %u byte of int\n",saveInts);
 
 		temp >>= 8;
 		byte = temp & 0xff;
-		if (saveInts=GZWRITE(StateFile, &byte, 1) == 0) {
+		if (GZWRITE(StateFile, &byte, 1) == 0) {
 			GetGZErrorText();
 			break;
 		}
-		printf("Wrote byte 2: %u byte of int\n",saveInts);
 
 		temp >>= 8;
 		byte = (temp & 0x7f) | signbit;
-		if (saveInts=GZWRITE(StateFile, &byte, 1) == 0) {
+		if (GZWRITE(StateFile, &byte, 1) == 0) {
 			GetGZErrorText();
 			break;
 		}
-		printf("Wrote byte 3: %u byte of int\n",saveInts);
 
 		num--;
 	}
@@ -283,7 +267,6 @@ void StateSav_SaveINT(const int *data, int num)
 
 void StateSav_ReadINT(int *data, int num)
 {
-  unsigned int readInts=0;
 	if (!StateFile || nFileError != Z_OK)
 		return;
 
@@ -292,29 +275,25 @@ void StateSav_ReadINT(int *data, int num)
 		int temp;
 		UBYTE byte1, byte2, byte3, byte4;
 
-		if (readInts=GZREAD(StateFile, &byte1, 1) == 0) {
+		if (GZREAD(StateFile, &byte1, 1) == 0) {
 			GetGZErrorText();
 			break;
 		}
-		printf("Read byte 0: %u byte of int\n",readInts);
 
-		if (readInts=GZREAD(StateFile, &byte2, 1) == 0) {
+		if (GZREAD(StateFile, &byte2, 1) == 0) {
 			GetGZErrorText();
 			break;
 		}
-		printf("Read byte 1: %u byte of int\n",readInts);
 
-		if (readInts=GZREAD(StateFile, &byte3, 1) == 0) {
+		if (GZREAD(StateFile, &byte3, 1) == 0) {
 			GetGZErrorText();
 			break;
 		}
-		printf("Read byte 2: %u byte of int\n",readInts);
 
-		if (readInts=GZREAD(StateFile, &byte4, 1) == 0) {
+		if (GZREAD(StateFile, &byte4, 1) == 0) {
 			GetGZErrorText();
 			break;
 		}
-		printf("Read byte 3: %u byte of int\n",readInts);
 
 		signbit = byte4 & 0x80;
 		byte4 &= 0x7f;
