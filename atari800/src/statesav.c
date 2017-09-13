@@ -128,13 +128,14 @@ static void GetGZErrorText(void)
 	}
 	Log_print("ZLIB returned the following error: %s", error);
 #endif /* GZERROR */
+#ifndef __LIBRETRO__
 	Log_print("State file I/O failed.");
+#endif
 }
 
 /* Value is memory location of data, num is number of type to save */
 void StateSav_SaveUBYTE(const UBYTE *data, int num)
 {
-  printf("StateSav_SaveUBYTE(%c,%d)",data,num);
 	if (!StateFile || nFileError != Z_OK)
 		return;
 
