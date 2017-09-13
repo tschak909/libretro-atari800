@@ -726,7 +726,7 @@ bool retro_load_game_special(unsigned type, const struct retro_game_info *info, 
 
 size_t retro_serialize_size(void)
 {
-  return StateSav_len();
+  return 210000;
 }
 
 bool retro_serialize(void *data_, size_t size)
