@@ -462,7 +462,7 @@ int StateSav_ReadAtariState(const char *filename, const char *mode)
 #endif
 
 #endif
-
+	statesav_lock=1;
 	printf("statesav LOCK\n");
 	
 	if (StateFile != NULL) {

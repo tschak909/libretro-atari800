@@ -736,10 +736,10 @@ size_t retro_serialize_size(void)
 bool retro_serialize(void *data_, size_t size)
 {
   memset(membuf,0,ALLOC_LEN);
- /*  printf("statesav WAITLOCK\n"); */
- /* stlock1: if (statesav_lock==1) */
- /*    goto stlock1; */
- /*  printf("statesav LOCKFREE\n"); */
+  printf("statesav WAITLOCK\n");
+ stlock1: if (statesav_lock==1)
+    goto stlock1;
+  printf("statesav LOCKFREE\n");
 #ifdef WIN32
   StateSav_SaveAtariState("ATARI","wb",0);
 #else
@@ -757,19 +757,19 @@ bool retro_unserialize(const void *data_, size_t size)
 {
   memset(membuf,0,ALLOC_LEN);
   memcpy(membuf,data_,size);
- /*  printf("statesav WAITLOCK\n"); */
- /* stlock3: if (statesav_lock==1) */
- /*    goto stlock3; */
- /*  printf("statesav LOCKFREE\n"); */
+  printf("statesav WAITLOCK\n");
+ stlock3: if (statesav_lock==1)
+    goto stlock3;
+  printf("statesav LOCKFREE\n");
 #ifdef WIN32
   StateSav_ReadAtariState("ATARI","rb");
 #else
   StateSav_ReadAtariState("ATARI","r");
 #endif
- /*  printf("statesav WAITLOCK\n"); */
- /* stlock4: if (statesav_lock==1) */
- /*    goto stlock4; */
- /*  printf("statesav LOCKFREE\n"); */
+  printf("statesav WAITLOCK\n");
+ stlock4: if (statesav_lock==1)
+    goto stlock4;
+  printf("statesav LOCKFREE\n");
   return true;
 }
 
