@@ -348,18 +348,10 @@ int StateSav_SaveAtariState(const char *filename, const char *mode, UBYTE SaveVe
   printf("statesav SAVE_ATARI_STATE LOCK\n");
   statesav_lock=1;
 	UBYTE StateVersion = SAVE_VERSION_NUMBER;
-#if defined(__LIBRETRO__)
-
-/* #if defined(WIN32) */
-/* 	char nulname[] = "NUL"; */
-/* #else */
-/* 	char nulname[] = "/dev/null"; */
-/* #endif 	 */
-	
-#endif /* __LIBRETRO__ */
 	
 	if (StateFile != NULL) {
 		GZCLOSE(StateFile);
+		printf("XXX WAS OPENED, CLOSING.\n");
 		StateFile = NULL;
 	}
 	nFileError = Z_OK;
@@ -430,14 +422,14 @@ int StateSav_SaveAtariState(const char *filename, const char *mode, UBYTE SaveVe
 		StateSav_SaveINT(&local_xld_enabled, 1);
 		printf("XXX XLD DISABLED WRITTEN\n");
 	}
-#ifdef DREAMCAST
-	DCStateSave();
-#endif
 	
-	if (GZCLOSE(StateFile) != 0) {
-		StateFile = NULL;
-		return FALSE;
-	}
+	/* if (GZCLOSE(StateFile) != 0) { */
+	/* 	StateFile = NULL; */
+	/* 	return FALSE; */
+	/* } */
+
+	GZCLOSE(StateFile);
+	
 	printf("XXX STATEFILE CLOSED\n");
 	StateFile = NULL;
 
