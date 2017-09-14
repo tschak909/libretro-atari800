@@ -345,7 +345,7 @@ void StateSav_ReadFNAME(char *filename)
 
 int StateSav_SaveAtariState(const char *filename, const char *mode, UBYTE SaveVerbose)
 {
-  printf("statesav LOCK\n");
+  printf("statesav SAVE_ATARI_STATE LOCK\n");
   statesav_lock=1;
 	UBYTE StateVersion = SAVE_VERSION_NUMBER;
 #if defined(__LIBRETRO__)
@@ -443,7 +443,7 @@ int StateSav_SaveAtariState(const char *filename, const char *mode, UBYTE SaveVe
 	if (nFileError != Z_OK)
 		return FALSE;
 
-	printf("statesav UNLOCK\n");
+	printf("statesav SAVE_ATARI_STATE UNLOCK\n");
 	statesav_lock=0;
 	return TRUE;
 }
@@ -463,7 +463,7 @@ int StateSav_ReadAtariState(const char *filename, const char *mode)
 
 #endif
 	statesav_lock=1;
-	printf("statesav LOCK\n");
+	printf("statesav READ_ATARI_STATE LOCK\n");
 	
 	if (StateFile != NULL) {
 		GZCLOSE(StateFile);
@@ -594,7 +594,7 @@ int StateSav_ReadAtariState(const char *filename, const char *mode)
 	if (nFileError != Z_OK)
 		return FALSE;
 
-	printf("statesav UNLOCK\n");
+	printf("statesav READ_ATARI_STATE UNLOCK\n");
 	statesav_lock=0;
 	
 	return TRUE;
