@@ -345,7 +345,7 @@ void StateSav_ReadFNAME(char *filename)
 
 int StateSav_SaveAtariState(const char *filename, const char *mode, UBYTE SaveVerbose)
 {
-  statesav_lock=!statesav_lock;
+  statesav_lock=1;
 	UBYTE StateVersion = SAVE_VERSION_NUMBER;
 #if defined(__LIBRETRO__)
 
@@ -442,7 +442,7 @@ int StateSav_SaveAtariState(const char *filename, const char *mode, UBYTE SaveVe
 	if (nFileError != Z_OK)
 		return FALSE;
 
-	statesav_lock=!statesav_lock;
+	statesav_lock=0;
 	return TRUE;
 }
 
@@ -453,7 +453,7 @@ int StateSav_ReadAtariState(const char *filename, const char *mode)
 	UBYTE SaveVerbose = 0;   /* Verbose mode means save basic, OS if patched */
 #if defined(__LIBRETRO__)
 
-	statesav_lock=!statesav_lock;
+	statesav_lock=1;
 #if defined(WIN32)
 	char nulname[] = "NUL";
 #else
@@ -592,7 +592,7 @@ int StateSav_ReadAtariState(const char *filename, const char *mode)
 	if (nFileError != Z_OK)
 		return FALSE;
 
-	statesav_lock=!statesav_lock;
+	statesav_lock=0;
 	
 	return TRUE;
 }
