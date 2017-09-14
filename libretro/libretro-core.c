@@ -51,6 +51,8 @@ extern void Emu_init();
 extern void Emu_uninit();
 extern void input_gui(void);
 
+unsigned int statesav_lock;
+
 const char *retro_save_directory;
 const char *retro_system_directory;
 const char *retro_content_directory;
@@ -377,6 +379,9 @@ void Emu_init(){
 
  //  update_variables();
 
+   statesav_lock=0;
+   statesav_lock=!statesav_lock;
+   
    membuf=malloc(ALLOC_LEN);
    memset(membuf,0,ALLOC_LEN);
    
@@ -732,12 +737,16 @@ size_t retro_serialize_size(void)
 bool retro_serialize(void *data_, size_t size)
 {
   memset(membuf,0,ALLOC_LEN);
+ stlock1: if (statesav_lock)
+    goto stlock1;
 #ifdef WIN32
   StateSav_SaveAtariState("ATARI","wb",0);
 #else
   StateSav_SaveAtariState("ATARI","w",0);
 #endif
   memcpy(data_,membuf,ALLOC_LEN);
+ stlock2: if (statesav_lock)
+    goto stlock2;
   return true;
 }
 
@@ -745,11 +754,15 @@ bool retro_unserialize(const void *data_, size_t size)
 {
   memset(membuf,0,ALLOC_LEN);
   memcpy(membuf,data_,size);
+ stlock3: if (statesav_lock)
+    goto stlock3;
 #ifdef WIN32
   StateSav_ReadAtariState("ATARI","rb");
 #else
   StateSav_ReadAtariState("ATARI","r");
 #endif
+ stlock4: if (statesav_lock)
+    goto stlock4;
   return true;
 }
 

@@ -76,6 +76,7 @@
 
 #if defined(__LIBRETRO__)
 extern char* membuf;
+extern int statesav_lock;
 static size_t state_len;
 #define GZOPEN(X, Y)     fmemopen(membuf, 210000,Y)
 #define GZCLOSE(X)       fclose(X)
@@ -344,6 +345,7 @@ void StateSav_ReadFNAME(char *filename)
 
 int StateSav_SaveAtariState(const char *filename, const char *mode, UBYTE SaveVerbose)
 {
+  statesav_lock=!statesav_lock;
 	UBYTE StateVersion = SAVE_VERSION_NUMBER;
 #if defined(__LIBRETRO__)
 
@@ -440,6 +442,7 @@ int StateSav_SaveAtariState(const char *filename, const char *mode, UBYTE SaveVe
 	if (nFileError != Z_OK)
 		return FALSE;
 
+	statesav_lock=!statesav_lock;
 	return TRUE;
 }
 
@@ -450,6 +453,7 @@ int StateSav_ReadAtariState(const char *filename, const char *mode)
 	UBYTE SaveVerbose = 0;   /* Verbose mode means save basic, OS if patched */
 #if defined(__LIBRETRO__)
 
+	statesav_lock=!statesav_lock;
 #if defined(WIN32)
 	char nulname[] = "NUL";
 #else
@@ -588,6 +592,8 @@ int StateSav_ReadAtariState(const char *filename, const char *mode)
 	if (nFileError != Z_OK)
 		return FALSE;
 
+	statesav_lock=!statesav_lock;
+	
 	return TRUE;
 }
 
