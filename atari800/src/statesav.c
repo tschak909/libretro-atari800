@@ -365,6 +365,7 @@ int StateSav_SaveAtariState(const char *filename, const char *mode, UBYTE SaveVe
 	nFileError = Z_OK;
 
 	StateFile = GZOPEN(filename, mode);
+	printf("XXX OPENED\n");
 	if (StateFile == NULL) {
 		Log_print("Could not open %s for state save.", filename);
 		GetGZErrorText();
@@ -381,34 +382,53 @@ int StateSav_SaveAtariState(const char *filename, const char *mode, UBYTE SaveVe
 		return FALSE;
 	}
 
+	printf("XXX HEADER WRITTEN\n");
+
 	StateSav_SaveUBYTE(&StateVersion, 1);
+
+	printf("XXX VERSION WRITTEN\n");
+	
 	StateSav_SaveUBYTE(&SaveVerbose, 1);
+
+	printf("XXX VERBOSEBIT WRITTEN\n");
 	/* The order here is important. Atari800_StateSave must be first because it saves the machine type, and
 	   decisions on what to save/not save are made based off that later in the process */
 	Atari800_StateSave();
+	printf("XXX ATARI800 STATE SAVE WRITTEN\n");
 	CARTRIDGE_StateSave();
+	printf("XXX CARTRIDGE STATE SAVE WRITTEN\n");
 	SIO_StateSave();
+	printf("XXX SIO STATE SAVE WRITTEN\n");
 	ANTIC_StateSave();
+	printf("XXX ANTIC STATE SAVE WRITTEN\n");
 	CPU_StateSave(SaveVerbose);
+	printf("XXX VERBOSE CPU STATE SAVE WRITTEN\n");
 	GTIA_StateSave();
+	printf("XXX GTIA STATE SAVE WRITTEN\n");
 	PIA_StateSave();
+	printf("XXX PIA STATE SAVE WRITTEN.\n");
 	POKEY_StateSave();
+	printf("XXX POKEY STATE SAVE WRITTEN\n");
 	{
 		int local_xep80_enabled = FALSE;
 		StateSav_SaveINT(&local_xep80_enabled, 1);
+		printf("XXX XEP80 DISABLED WRITTEN\n");
 	}
 	PBI_StateSave();
 	{
 		int local_mio_enabled = FALSE;
 		StateSav_SaveINT(&local_mio_enabled, 1);
+		printf("XXX MIO DISABLED WRITTEN\n");
 	}
 	{
 		int local_bb_enabled = FALSE;
 		StateSav_SaveINT(&local_bb_enabled, 1);
+		printf("XXX BLACKBOX DISABLED WRITTEN\n");
 	}
 	{
 		int local_xld_enabled = FALSE;
 		StateSav_SaveINT(&local_xld_enabled, 1);
+		printf("XXX XLD DISABLED WRITTEN\n");
 	}
 #ifdef DREAMCAST
 	DCStateSave();
@@ -418,6 +438,7 @@ int StateSav_SaveAtariState(const char *filename, const char *mode, UBYTE SaveVe
 		StateFile = NULL;
 		return FALSE;
 	}
+	printf("XXX STATEFILE CLOSED\n");
 	StateFile = NULL;
 
 	if (nFileError != Z_OK)

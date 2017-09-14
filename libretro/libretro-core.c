@@ -741,9 +741,9 @@ bool retro_serialize(void *data_, size_t size)
     goto stlock1;
   printf("statesav RETRO_SERIALIZE LOCKFREE\n");
 #ifdef WIN32
-  StateSav_SaveAtariState("ATARI","wb",0);
+  StateSav_SaveAtariState("ATARI","wb",1);
 #else
-  StateSav_SaveAtariState("ATARI","w",0);
+  StateSav_SaveAtariState("ATARI","w",1);
 #endif
   memcpy(data_,membuf,ALLOC_LEN);
   printf("statesav RETRO_SERIALIZE WAITLOCK\n");
