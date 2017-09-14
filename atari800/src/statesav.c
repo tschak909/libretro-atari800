@@ -345,19 +345,16 @@ void StateSav_ReadFNAME(char *filename)
 
 int StateSav_SaveAtariState(const char *filename, const char *mode, UBYTE SaveVerbose)
 {
-  printf("statesav SAVE_ATARI_STATE LOCK\n");
   statesav_lock=1;
 	UBYTE StateVersion = SAVE_VERSION_NUMBER;
 	
 	if (StateFile != NULL) {
 		GZCLOSE(StateFile);
-		printf("XXX WAS OPENED, CLOSING.\n");
 		StateFile = NULL;
 	}
 	nFileError = Z_OK;
 
 	StateFile = GZOPEN(filename, mode);
-	printf("XXX OPENED\n");
 	if (StateFile == NULL) {
 		Log_print("Could not open %s for state save.", filename);
 		GetGZErrorText();
@@ -374,53 +371,36 @@ int StateSav_SaveAtariState(const char *filename, const char *mode, UBYTE SaveVe
 		return FALSE;
 	}
 
-	printf("XXX HEADER WRITTEN\n");
-
 	StateSav_SaveUBYTE(&StateVersion, 1);
 
-	printf("XXX VERSION WRITTEN\n");
-	
 	StateSav_SaveUBYTE(&SaveVerbose, 1);
 
-	printf("XXX VERBOSEBIT WRITTEN\n");
 	/* The order here is important. Atari800_StateSave must be first because it saves the machine type, and
 	   decisions on what to save/not save are made based off that later in the process */
 	Atari800_StateSave();
-	printf("XXX ATARI800 STATE SAVE WRITTEN\n");
 	CARTRIDGE_StateSave();
-	printf("XXX CARTRIDGE STATE SAVE WRITTEN\n");
 	SIO_StateSave();
-	printf("XXX SIO STATE SAVE WRITTEN\n");
 	ANTIC_StateSave();
-	printf("XXX ANTIC STATE SAVE WRITTEN\n");
 	CPU_StateSave(SaveVerbose);
-	printf("XXX VERBOSE CPU STATE SAVE WRITTEN\n");
 	GTIA_StateSave();
-	printf("XXX GTIA STATE SAVE WRITTEN\n");
 	PIA_StateSave();
-	printf("XXX PIA STATE SAVE WRITTEN.\n");
 	POKEY_StateSave();
-	printf("XXX POKEY STATE SAVE WRITTEN\n");
 	{
 		int local_xep80_enabled = FALSE;
 		StateSav_SaveINT(&local_xep80_enabled, 1);
-		printf("XXX XEP80 DISABLED WRITTEN\n");
 	}
 	PBI_StateSave();
 	{
 		int local_mio_enabled = FALSE;
 		StateSav_SaveINT(&local_mio_enabled, 1);
-		printf("XXX MIO DISABLED WRITTEN\n");
 	}
 	{
 		int local_bb_enabled = FALSE;
 		StateSav_SaveINT(&local_bb_enabled, 1);
-		printf("XXX BLACKBOX DISABLED WRITTEN\n");
 	}
 	{
 		int local_xld_enabled = FALSE;
 		StateSav_SaveINT(&local_xld_enabled, 1);
-		printf("XXX XLD DISABLED WRITTEN\n");
 	}
 	
 	/* if (GZCLOSE(StateFile) != 0) { */
@@ -430,13 +410,11 @@ int StateSav_SaveAtariState(const char *filename, const char *mode, UBYTE SaveVe
 
 	GZCLOSE(StateFile);
 	
-	printf("XXX STATEFILE CLOSED\n");
 	StateFile = NULL;
 
 	if (nFileError != Z_OK)
 		return FALSE;
 
-	printf("statesav SAVE_ATARI_STATE UNLOCK\n");
 	statesav_lock=0;
 	return TRUE;
 }
@@ -456,7 +434,6 @@ int StateSav_ReadAtariState(const char *filename, const char *mode)
 
 #endif
 	statesav_lock=1;
-	printf("statesav READ_ATARI_STATE LOCK\n");
 	
 	if (StateFile != NULL) {
 		GZCLOSE(StateFile);
@@ -466,7 +443,6 @@ int StateSav_ReadAtariState(const char *filename, const char *mode)
 
 	StateFile = GZOPEN(filename, mode);
 	if (StateFile == NULL) {
-		Log_print("Could not open %s for state read.", filename);
 		GetGZErrorText();
 		return FALSE;
 	}
@@ -486,7 +462,6 @@ int StateSav_ReadAtariState(const char *filename, const char *mode)
 		return FALSE;
 	}
 	if (memcmp(header_string, "ATARI800", 8) != 0) {
-		Log_print("This is not an Atari800 state save file.");
 		GZCLOSE(StateFile);
 		StateFile = NULL;
 		return FALSE;
@@ -494,7 +469,6 @@ int StateSav_ReadAtariState(const char *filename, const char *mode)
 
 	if (GZREAD(StateFile, &StateVersion, 1) == 0
 	 || GZREAD(StateFile, &SaveVerbose, 1) == 0) {
-		Log_print("Failed read from Atari state file.");
 		GetGZErrorText();
 		GZCLOSE(StateFile);
 		StateFile = NULL;
@@ -502,7 +476,6 @@ int StateSav_ReadAtariState(const char *filename, const char *mode)
 	}
 
 	if (StateVersion > SAVE_VERSION_NUMBER || StateVersion < 3) {
-		Log_print("Cannot read this state file because it is an incompatible version.");
 		GZCLOSE(StateFile);
 		StateFile = NULL;
 		return FALSE;
@@ -528,7 +501,6 @@ int StateSav_ReadAtariState(const char *filename, const char *mode)
 	if (nFileError != Z_OK)
 		return FALSE;
 
-	printf("statesav READ_ATARI_STATE UNLOCK\n");
 	statesav_lock=0;
 	
 	return TRUE;
