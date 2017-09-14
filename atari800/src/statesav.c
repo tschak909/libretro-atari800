@@ -393,45 +393,25 @@ int StateSav_SaveAtariState(const char *filename, const char *mode, UBYTE SaveVe
 	GTIA_StateSave();
 	PIA_StateSave();
 	POKEY_StateSave();
-#ifdef XEP80_EMULATION
-	XEP80_StateSave();
-#else
 	{
 		int local_xep80_enabled = FALSE;
 		StateSav_SaveINT(&local_xep80_enabled, 1);
 	}
-#endif /* XEP80_EMULATION */
 	PBI_StateSave();
-#ifdef PBI_MIO
-	PBI_MIO_StateSave();
-#else
 	{
 		int local_mio_enabled = FALSE;
 		StateSav_SaveINT(&local_mio_enabled, 1);
 	}
-#endif /* PBI_MIO */
-#ifdef PBI_BB
-	PBI_BB_StateSave();
-#else
 	{
 		int local_bb_enabled = FALSE;
 		StateSav_SaveINT(&local_bb_enabled, 1);
 	}
-#endif /* PBI_BB */
-#ifdef PBI_XLD
-	PBI_XLD_StateSave();
-#else
 	{
 		int local_xld_enabled = FALSE;
 		StateSav_SaveINT(&local_xld_enabled, 1);
 	}
-#endif /* PBI_XLD */
 #ifdef DREAMCAST
 	DCStateSave();
-#endif
-
-#if defined(__LIBRETRO__)
-	state_len = ftell(StateFile);
 #endif
 	
 	if (GZCLOSE(StateFile) != 0) {
@@ -525,65 +505,6 @@ int StateSav_ReadAtariState(const char *filename, const char *mode)
 	GTIA_StateRead(StateVersion);
 	PIA_StateRead(StateVersion);
 	POKEY_StateRead();
-	if (StateVersion >= 6) {
-#ifndef __LIBRETRO__
-#ifdef XEP80_EMULATION
-		XEP80_StateRead();
-#else
-		int local_xep80_enabled;
-		StateSav_ReadINT(&local_xep80_enabled,1);
-		if (local_xep80_enabled) {
-			Log_print("Cannot read this state file because this version does not support XEP80.");
-			GZCLOSE(StateFile);
-			StateFile = NULL;
-			return FALSE;
-		}
-#endif /* XEP80_EMULATION */
-		PBI_StateRead();
-#ifdef PBI_MIO
-		PBI_MIO_StateRead();
-#else
-		{
-			int local_mio_enabled;
-			StateSav_ReadINT(&local_mio_enabled,1);
-			if (local_mio_enabled) {
-				Log_print("Cannot read this state file because this version does not support MIO.");
-				GZCLOSE(StateFile);
-				StateFile = NULL;
-				return FALSE;
-			}
-		}
-#endif /* PBI_MIO */
-#ifdef PBI_BB
-		PBI_BB_StateRead();
-#else
-		{
-			int local_bb_enabled;
-			StateSav_ReadINT(&local_bb_enabled,1);
-			if (local_bb_enabled) {
-				Log_print("Cannot read this state file because this version does not support the Black Box.");
-				GZCLOSE(StateFile);
-				StateFile = NULL;
-				return FALSE;
-			}
-		}
-#endif /* PBI_BB */
-#ifdef PBI_XLD
-		PBI_XLD_StateRead();
-#else
-		{
-			int local_xld_enabled;
-			StateSav_ReadINT(&local_xld_enabled,1);
-			if (local_xld_enabled) {
-				Log_print("Cannot read this state file because this version does not support the 1400XL/1450XLD.");
-				GZCLOSE(StateFile);
-				StateFile = NULL;
-				return FALSE;
-			}
-		}
-#endif /* PBI_XLD */
-#endif /* LIBRETRO */
-	}
 #ifdef DREAMCAST
 	DCStateRead();
 #endif
