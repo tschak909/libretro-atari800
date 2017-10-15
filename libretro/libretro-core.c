@@ -23,6 +23,7 @@ int retroh=300;
 
 unsigned atari_devices[ 2 ];
 
+int keyboard_type=0;
 int autorun5200=0;
 int a5200_joyhack=0;
 
@@ -119,7 +120,10 @@ void retro_set_environment(retro_environment_t cb)
          "atari800_resolution",
          "Internal resolution; 336x240|320x240|384x240|384x272|384x288|400x300",
       },
-  
+     {
+       "atari800_keyboard",
+       "Retroarch Keyboard type; poll|callback",
+     },
 
       { NULL, NULL },
    };
@@ -157,7 +161,7 @@ static void update_variables(void)
    {
       char *pch;
       char str[100];
-      snprintf(str, sizeof(str), var.value);
+      snprintf(str, sizeof(str), "%s", var.value);
 
       pch = strtok(str, "x");
       if (pch)
@@ -342,6 +346,20 @@ static void update_variables(void)
 	 }
      }
    
+   var.key = "atari800_keyboard";
+   var.value = NULL;
+
+   if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+     {
+       if (strcmp(var.value, "poll") == 0)
+	 {
+		keyboard_type=0;
+	 }
+       else if (strcmp(var.value, "callback") == 0)
+	 {
+		keyboard_type=1;
+	 }
+     }
 }
 
 static void retro_wrap_emulator()
@@ -638,11 +656,14 @@ void retro_run(void)
 
    co_switch(emuThread);
 }
-
+extern char Key_Sate[512];
 unsigned int lastdown,lastup,lastchar;
 static void keyboard_cb(bool down, unsigned keycode,
       uint32_t character, uint16_t mod)
 {
+	if(keyboard_type==0)return;
+	Key_Sate[keycode]= down ? 1 : 0;
+
 /*
   printf( "Down: %s, Code: %d, Char: %u, Mod: %u.\n",
          down ? "yes" : "no", keycode, character, mod);

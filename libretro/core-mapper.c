@@ -72,6 +72,8 @@ unsigned char MXjoy[2]; // joy
 
 extern int a5200_joyhack;
 
+extern int keyboard_type;
+
 //MOUSE
 extern int pushi;  // gui mouse btn
 int gmx,gmy; //gui mouse
@@ -371,6 +373,8 @@ void Screen_SetFullUpdate(int scr)
 void Process_key()
 {
 	int i;
+
+	if(keyboard_type==1)return;
 
 	for(i=0;i<320;i++)
         	Key_Sate[i]=input_state_cb(0, RETRO_DEVICE_KEYBOARD, 0,i) ? 0x80: 0;

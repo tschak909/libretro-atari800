@@ -145,6 +145,9 @@
 #ifdef DIRECTX
 #include "win32\main.h"
 #endif
+#if defined(__LIBRETRO__)
+extern const char *retro_system_directory;
+#endif
 
 int Atari800_machine_type = Atari800_MACHINE_XLXE;
 
@@ -437,9 +440,8 @@ int Atari800_Initialise(int *argc, char *argv[])
 //LIBRETRO HACK
 //#ifndef ANDROID
 #if !defined(ANDROID) || defined(__LIBRETRO__)
-#if defined(__LIBRETRO__) && defined(ANDROID) 
-//FIXME USE RETROSYSDIR
-	SYSROM_FindInDir("/mnt/sdcard/atari800", TRUE);
+#if defined(__LIBRETRO__)
+	SYSROM_FindInDir(retro_system_directory, TRUE);
 #endif
 	SYSROM_FindInDir(".", TRUE); /* current directory */
 #if defined(unix) || defined(__unix__) || defined(__linux__)

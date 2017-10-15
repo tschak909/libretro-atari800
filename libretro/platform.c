@@ -266,6 +266,8 @@ int PLATFORM_Keyboard(void)
 		if(Key_Sate[RETROK_HASH])return AKEY_5200_HASH ^ shiftctrl;
 		if(Key_Sate[RETROK_EQUALS])return AKEY_5200_HASH ^ shiftctrl;
 		if(Key_Sate[RETROK_ASTERISK])return AKEY_5200_ASTERISK ^ shiftctrl;
+		if(Key_Sate[RETROK_KP_MULTIPLY])return AKEY_5200_ASTERISK ^ shiftctrl;
+
 
 		return AKEY_NONE;
 	}
